@@ -28,7 +28,7 @@ jobs:
     steps :
       - uses: actions/checkout@v3
       - name: setup-nix
-        uses: ./.github/actions/setup-nix
+        uses: MadMcCrow/flake-github-workflow/.github/actions/setup-nix
       - name: Generate flake.json
         run: |
           nix flake show --json > flake.json
@@ -45,7 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup-nix
-        uses: ./.github/actions/setup-nix
+        uses: MadMcCrow/flake-github-workflow/.github/actions/setup-nix
       - name: Update the flake
         run: nix flake update
       - name: Store flake.lock
@@ -66,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup-nix
-        uses: ./.github/actions/setup-nix
+        uses: MadMcCrow/flake-github-workflow/.github/actions/setup-nix
       - name: Set up cachix
         uses: cachix/cachix-action@v11
         with:
@@ -89,7 +89,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: setup-nix
-        uses: ./.github/actions/setup-nix
+        uses: MadMcCrow/flake-github-workflow/.github/actions/setup-nix
       - name: Restore flake.lock
         uses: actions/download-artifact@v3
         with:
@@ -114,7 +114,7 @@ jobs:
         git config user.email ${{inputs.git_email}}
         git config user.name "Git Bot"
     - id: pull-request
-      uses: ./.github/actions/pull-request
+      uses: MadMcCrow/flake-github-workflow/.github/actions/pull-request
       with: 
         commit:   ${{inputs.commit_message}}
         pr_title: ${{inputs.pr_message}}

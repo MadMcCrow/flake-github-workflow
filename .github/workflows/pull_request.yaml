@@ -5,6 +5,10 @@ description: 'Create a pull request and merge it'
 on:
   workflow_call:
     inputs:
+      git_email:
+        description: 'what email to use for git'
+        required: false
+        default: 'noe.perard+git@gmail.com'
       assignee:
         description: 'who to assign PR to'
         required: false

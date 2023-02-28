@@ -9,8 +9,8 @@ on:
 
 jobs:
 
-   call-workflow-passing-data:
-     uses: MadMcCrow/flake-github-workflow/.github/workflows/update-flake.yml@main
+  call-workflow-passing-data:
+    uses: MadMcCrow/flake-github-workflow/.github/workflows/update-flake.yml@main
 
-   call-workflow-passing-data:
-     uses: MadMcCrow/flake-github-workflow/.github/workflows/pull-request.yml@main
+  call-workflow-passing-data:
+    uses: MadMcCrow/flake-github-workflow/.github/workflows/pull-request.yml@main

@@ -26,7 +26,6 @@ jobs:
  push_update:
     runs-on: ubuntu-20.04
     permissions: write-all
-    needs: [update_flake, build_flake, check_flake]
     steps:
     - uses: actions/checkout@v3
     - name: Restore flake.lock

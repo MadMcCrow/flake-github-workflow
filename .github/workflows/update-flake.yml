@@ -1,0 +1,76 @@
+name: Update Flake
+
+on:
+  workflow_call:
+      secrets:
+        CACHIX_SIGNING_KEY:
+          required: true
+
+jobs:
+  # update flake inputs
+  update_flake:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup-nix
+        uses: cachix/install-nix-action@v19
+        with:
+          extra_nix_config: ${{variables.EXTRA_NIX_CONFIG}}
+          install_url: https://releases.nixos.org/nix/nix-2.12.0/install
+      - name: Update the flake
+        run: nix flake update
+      - name: Store flake.lock
+        uses: actions/upload-artifact@v3
+        with:
+          name: flake_lock
+          path: flake.lock
+
+  # build new flake 
+  build_flake:
+    runs-on: ubuntu-20.04
+    needs: [generate_matrix, update_flake]
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        config: ${{fromJson(needs.generate_matrix.outputs.configurations)}}
+    steps:
+      - uses: actions/checkout@v3
+     - name: setup-nix
+        uses: cachix/install-nix-action@v19
+        with:
+          extra_nix_config: ${{variables.EXTRA_NIX_CONFIG}}
+          install_url: https://releases.nixos.org/nix/nix-2.12.0/install
+      - name: Set up cachix
+        uses: cachix/cachix-action@v11
+        with:
+          name: nixos-configuration
+          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
+          pathsToPush: result
+      - name: Restore flake.lock
+        uses: actions/download-artifact@v3
+        with:
+          name: flake_lock
+      - name: Build everything
+        run: |
+          nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
+
+  # check the flake itself
+  check_flake:
+    runs-on: ubuntu-20.04
+    needs: [update_flake]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - name: setup-nix
+        uses: cachix/install-nix-action@v19
+        with:
+          extra_nix_config: ${{variables.EXTRA_NIX_CONFIG}}
+          install_url: https://releases.nixos.org/nix/nix-2.12.0/install
+      - name: Restore flake.lock
+        uses: actions/download-artifact@v3
+        with:
+          name: flake_lock
+      - name: Check everything
+        run: |
+          nix flake check --keep-going

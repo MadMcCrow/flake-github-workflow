@@ -1,0 +1,16 @@
+name: update, build and merge with PR
+
+on:
+  workflow_call:
+    inputs:
+      git_mail:
+        description: 'email to use'
+        required: true
+
+jobs:
+
+   call-workflow-passing-data:
+     uses: MadMcCrow/flake-github-workflow/.github/workflows/update-flake.yml@main
+
+   call-workflow-passing-data:
+     uses: MadMcCrow/flake-github-workflow/.github/workflows/pull-request.yml@main

@@ -10,8 +10,8 @@ on:
 jobs:
 
   update-flake-reuse:
-    uses: MadMcCrow/flake-github-workflow/.github/workflows/update-flake.yml@main
+    uses: ./.github/workflows/update-flake.yml@main
 
   pull-request-reuse:
     needs: [update-flake-reuse]
-    uses: MadMcCrow/flake-github-workflow/.github/workflows/pull-request.yml@main
+    uses: ./.github/workflows/pull-request.yml@main

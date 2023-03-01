@@ -4,12 +4,10 @@ on:
   workflow_call:
     inputs:
       success_count:
-        type: int
         default: 1
         required: false
 
       failed_count:
-        type: int
         default: 3
         required: false
        

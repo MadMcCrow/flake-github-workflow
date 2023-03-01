@@ -31,6 +31,7 @@ jobs:
           repository: ${{inputs.repository}}
           keep_minimum_runs: ${{inputs.success_count}}
           delete_run_by_conclusion_pattern: success
+          retain_days: 0 # delete all but the latest, only keeping count
   
   del_failed_runs:
     runs-on: ubuntu-latest
@@ -42,3 +43,4 @@ jobs:
           repository: ${{inputs.repository}}
           keep_minimum_runs: ${{inputs.failed_count}}
           delete_run_by_conclusion_pattern: failure
+          retain_days: 0 # delete all but the latest, only keeping count

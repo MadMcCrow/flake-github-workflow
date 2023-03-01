@@ -52,7 +52,7 @@ jobs:
           nix flake show --json > flake.json
       - id: gen_configs
         run: |
-          vector=$(jq -c '{inputs.jq-command}' < flake.json)
+          vector=$(jq -c '${{inputs.jq-command}}' < flake.json)
           echo "vector=$vector" >> $GITHUB_OUTPUT
 
   # build new flake 

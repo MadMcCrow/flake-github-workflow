@@ -1,13 +1,18 @@
 name: 'Clean workflows runs'
 
+
 on:
   workflow_call:
     inputs:
+      # number of successful run to keep
       success_count:
+        # type is one of [string, choice, boolean, environment]
+        type: string
         default: 1
         required: false
-
+      # number of failed run to keep
       failed_count:
+        type: string
         default: 3
         required: false
        

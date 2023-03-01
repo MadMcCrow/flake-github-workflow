@@ -3,7 +3,13 @@ name: 'Update Flake'
 on:
   workflow_call:
       inputs:
+        cachix-repository:
+          type: string
+          required: true
         nix_extra_config:
+          type: string
+          required: true
+        jq-command:
           type: string
           required: true
       secrets:
@@ -29,6 +35,26 @@ jobs:
           name: flake_lock
           path: flake.lock
 
+ # generate JSONs for future builds and checks
+  generate_matrix:
+    runs-on: ubuntu-20.04
+    outputs:
+      matrix: ${{ steps.generate_matrix.output.vector }}
+    steps :
+      - uses: actions/checkout@v3
+      - name: setup-nix
+        uses: cachix/install-nix-action@v19
+        with:
+          extra_nix_config: ${{inputs.nix_extra_config}}
+          install_url: https://releases.nixos.org/nix/nix-2.12.0/install
+      - name: Generate flake.json
+        run: |
+          nix flake show --json > flake.json
+      - id: gen_configs
+        run: |
+          vector=$(jq -c '{inputs.jq-command}' < flake.json)
+          echo "vector=$vector" >> $GITHUB_OUTPUT
+
   # build new flake 
   build_flake:
     runs-on: ubuntu-20.04
@@ -37,7 +63,7 @@ jobs:
       fail-fast: false
       max-parallel: 5
       matrix:
-        config: ${{fromJson(needs.generate_matrix.outputs.configurations)}}
+        config: ${{fromJson(needs.generate_matrix.output.vector)}}
     steps:
       - uses: actions/checkout@v3
       - name: setup-nix
@@ -48,7 +74,7 @@ jobs:
       - name: Set up cachix
         uses: cachix/cachix-action@v11
         with:
-          name: nixos-configuration
+          name: ${{inputs.cachix-repository}}
           signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
           pathsToPush: result
       - name: Restore flake.lock
@@ -57,7 +83,7 @@ jobs:
           name: flake_lock
       - name: Build everything
         run: |
-          nix build .#nixosConfigurations.${{ matrix.config }}.config.system.build.toplevel
+          nix build .#${{ matrix.config }}
 
   # check the flake itself
   check_flake:

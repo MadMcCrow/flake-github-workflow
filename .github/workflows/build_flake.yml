@@ -41,6 +41,7 @@ jobs:
       - id: gen_matrix
         run: |
           vector=$(jq -c '${{inputs.jq-command}}' < flake.json)
+          echo "$vector"
           echo "vector=$vector" >> $GITHUB_OUTPUT
 
   # build new flake 

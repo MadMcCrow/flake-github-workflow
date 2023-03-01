@@ -4,6 +4,9 @@ name: 'Clean workflows runs'
 on:
   workflow_call:
     inputs:
+      repository:
+        type: string
+        default: ${{ github.repository }}
       # number of successful run to keep
       success_count:
         # type is one of [string, choice, boolean, environment]
@@ -25,7 +28,7 @@ jobs:
         uses: Mattraks/delete-workflow-runs@v2
         with:
           token: ${{ github.token }}
-          repository: ${{ github.repository }}
+          repository: ${{inputs.repository}}
           keep_minimum_runs: ${{inputs.success_count}}
           delete_run_by_conclusion_pattern: success
   
@@ -36,6 +39,6 @@ jobs:
         uses: Mattraks/delete-workflow-runs@v2
         with:
           token: ${{ github.token }}
-          repository: ${{ github.repository }}
+          repository: ${{inputs.repository}}
           keep_minimum_runs: ${{inputs.failed_count}}
           delete_run_by_conclusion_pattern: failed

@@ -27,7 +27,7 @@ jobs:
   generate_matrix:
     runs-on: ubuntu-20.04
     outputs:
-      matrix: ${{ steps.gen_matrix.output.vector }}
+      matrix: ${{ steps.gen_matrix.outputs.vector }}
     steps :
       - uses: actions/checkout@v3
       - name: setup-nix
@@ -54,6 +54,7 @@ jobs:
       matrix:
         config: ${{fromJson(needs.generate_matrix.outputs.matrix)}}
     steps:
+      - run: echo ${{ matrix.config }}
       - uses: actions/checkout@v3
       - name: setup-nix
         uses: cachix/install-nix-action@v19

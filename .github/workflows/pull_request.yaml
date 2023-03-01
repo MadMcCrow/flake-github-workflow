@@ -1,28 +1,26 @@
 name: 'Pull Request'
 
-description: 'Create a pull request and merge it'
-
 on:
   workflow_call:
     inputs:
       git_email:
-        description: 'what email to use for git'
+        type: string
         required: false
         default: 'noe.perard+git@gmail.com'
       assignee:
-        description: 'who to assign PR to'
+        type: string
         required: false
         default: 'MadMcCrow'
       commit:  
-        description: 'commit message'
+        type: string
         required: false
         default: ':robot: github action'
       pr_title:  
-        description: 'Pull request title'
+        type: string
         required: false
         default: ':robot: github action'
       pr_message:  
-        description: 'Pull request body message'
+        type: string
         required: false
         default: ':robot: github action on $(date -I)'
 

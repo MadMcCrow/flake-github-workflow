@@ -8,7 +8,7 @@ on:
           required: true
         nix_extra_config:
           type: string
-          required: true
+          required: false
           default: |
             auto-optimise-store = true
             access-tokens = github.com=${{ github.token }}

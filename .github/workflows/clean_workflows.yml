@@ -41,4 +41,4 @@ jobs:
           token: ${{ github.token }}
           repository: ${{inputs.repository}}
           keep_minimum_runs: ${{inputs.failed_count}}
-          delete_run_by_conclusion_pattern: failed
+          delete_run_by_conclusion_pattern: failure
